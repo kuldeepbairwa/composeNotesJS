@@ -16,16 +16,39 @@ const createNote = async (req, res) => {
 };
 
 // Get all notes for a user
+// const getAllNotes = async (req, res) => {
+//     try {
+//         const user_id = req.uid; // Assuming you have the user ID in req.uid
+//         const notes = await Note.find({ user: user_id });
+
+//         res.json(createResponse(true, 'Notes retrieved', { notes }));
+//     } catch (error) {
+//         res.status(500).json(createResponse(false, 'Something went wrong', `${error}`));
+//     }
+// };
+
+
+// Get all notes for a user with pagination
 const getAllNotes = async (req, res) => {
     try {
         const user_id = req.uid; // Assuming you have the user ID in req.uid
-        const notes = await Note.find({ user: user_id });
+        const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+        const limit = parseInt(req.query.limit) || 10; // Default to 10 notes per page if not provided
 
-        res.json(createResponse(true, 'Notes retrieved', { notes }));
+        const skip = (page - 1) * limit;
+
+        const notes = await Note.find({ user: user_id })
+            .skip(skip)
+            .limit(limit);
+
+        const total = await Note.countDocuments({ user: user_id });
+
+        res.json(createResponse(true, 'Notes retrieved', { notes, total, page, limit }));
     } catch (error) {
         res.status(500).json(createResponse(false, 'Something went wrong', `${error}`));
     }
 };
+
 
 // Update a note
 const updateNote = async (req, res) => {
