@@ -15,18 +15,6 @@ const createNote = async (req, res) => {
     }
 };
 
-// Get all notes for a user
-// const getAllNotes = async (req, res) => {
-//     try {
-//         const user_id = req.uid; // Assuming you have the user ID in req.uid
-//         const notes = await Note.find({ user: user_id });
-
-//         res.json(createResponse(true, 'Notes retrieved', { notes }));
-//     } catch (error) {
-//         res.status(500).json(createResponse(false, 'Something went wrong', `${error}`));
-//     }
-// };
-
 
 // Get all notes for a user with pagination
 const getAllNotes = async (req, res) => {
